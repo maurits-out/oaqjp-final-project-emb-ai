@@ -8,6 +8,8 @@ def detector():
     """ endpoint to trigger emotion detector on the textToAnalyze query parameter """
     text_to_analyze = request.args["textToAnalyze"]
     emotions = emotion_detector(text_to_analyze)
+    if emotions["dominant_emotion"] is None:
+        return "Invalid text! Please try again!"
     response = (
         f"For the given statement, the system response is "
         f"'anger': {emotions['anger']}, "
