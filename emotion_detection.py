@@ -1,4 +1,5 @@
 """ Provides functionality to detect emotion from a text """
+import json
 import requests
 
 def emotion_detector(text_to_analyze):
@@ -10,4 +11,7 @@ def emotion_detector(text_to_analyze):
     headers = { "grpc-metadata-mm-model-id": "emotion_aggregated-workflow_lang_en_stock" }
     body = { "raw_document": { "text": text_to_analyze } }
     response = requests.post(url, json = body, headers = headers, timeout = 10)
-    return response.text
+    formatted_response = json.loads(response.text)
+    emotion = formatted_response["emotionPredictions"][0]["emotion"]
+    emotion["dominant_emotion"] = max(emotion, key = emotion.get)
+    return emotion
